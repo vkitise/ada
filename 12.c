@@ -1,55 +1,38 @@
 #include <stdio.h>
-#include <stdbool.h>
 #define N 4
-void printSolution(char board[N][N]) {
+int board[N];
+int isSafe(int row, int col) {
+for (int i = 0; i < row; i++) {
+if (board[i] == col || board[i] - i == col - row || board[i] + i == col + row)
+return 0;
+}
+return 1;
+}
+int solve(int row) {
+if (row == N) {
 for (int i = 0; i < N; i++) {
 for (int j = 0; j < N; j++) {
-printf("%c ", board[i][j]);
+if (board[i] == j) printf("Q ");
+else printf("- ");
 }
 printf("\n");
 }
+printf("\n");
+return 1;
 }
-bool isSafe(char board[N][N], int row, int col) {
-for (int i = 0; i < row; i++) {
-if (board[i][col] == 'Q')
-return false;
-}
-for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
-if (board[i][j] == 'Q')
-return false;
-}
-for (int i = row, j = col; i >= 0 && j < N; i--, j++) {
-if (board[i][j] == 'Q')
-return false;
-}
-return true;
-}
-bool solveNQUtil(char board[N][N], int row) {
-if (row == N)
-return true;
 for (int col = 0; col < N; col++) {
-if (isSafe(board, row, col)) {
-board[row][col] = 'Q';
-if (solveNQUtil(board, row + 1))
-return true;
-board[row][col] = '-'; 
+if (isSafe(row, col)) {
+board[row] = col;
+if (solve(row + 1))
+return 1;
+board[row] = -1;
 }
 }
-return false;
-}
-void solve4Queens() {
-char board[N][N];
-for (int i = 0; i < N; i++)
-for (int j = 0; j < N; j++)
-board[i][j] = '-';
-if (!solveNQUtil(board, 0)) {
-printf("Solution does not exist\n");
-return;
-}
-printSolution(board);
+return 0;
 }
 int main() {
-printf("Solution for 4 Queens problem:\n");
-solve4Queens();
+if (!solve(0)) {
+printf("No solution exists for N = %d\n", N);
+}
 return 0;
 }
