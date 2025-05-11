@@ -1,13 +1,18 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-void selectionSort(int a[],int n){
-int i,j,min,t;
-for(i=0;i<n-1;i++){
-min=i;
-for(j=i+1;j<n;j++)
-if(a[j]<a[min])min=j;
-t=a[min];a[min]=a[i];a[i]=t;
+void swap(int* a,int* b){int t=*a;*a=*b;*b=t;}
+int partition(int a[],int l,int h){
+int p=a[h],i=l-1;
+for(int j=l;j<h;j++)if(a[j]<p)swap(&a[++i],&a[j]);
+swap(&a[i+1],&a[h]);
+return i+1;
+}
+void quickSort(int a[],int l,int h){
+if(l<h){
+int pi=partition(a,l,h);
+quickSort(a,l,pi-1);
+quickSort(a,pi+1,h);
 }
 }
 int getRandom(){return rand()%1000;}
@@ -17,7 +22,7 @@ srand(time(NULL));
 printf("Random numbers for n=%d:\n",n);
 for(int i=0;i<n;i++){a[i]=getRandom();printf("%d ",a[i]);}
 clock_t s=clock();
-selectionSort(a,n);
+quickSort(a,0,n-1);
 clock_t e=clock();
 double t=(double)(e-s)/CLOCKS_PER_SEC;
 printf("\n\nTime taken to sort for n=%d: %lf seconds\n\n",n,t);
