@@ -1,53 +1,29 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-void swap(int* a,int* b){
-int temp=*a;
-*a=*b;
-*b=temp;
-}
-int partition(int arr[],int low,int high){
-int pivot=arr[high];
-int i=(low-1);
-for(int j=low;j<=high-1;j++){
-if(arr[j]<pivot){
-i++;
-swap(&arr[i],&arr[j]);
+void selectionSort(int a[],int n){
+int i,j,min,t;
+for(i=0;i<n-1;i++){
+min=i;
+for(j=i+1;j<n;j++)
+if(a[j]<a[min])min=j;
+t=a[min];a[min]=a[i];a[i]=t;
 }
 }
-swap(&arr[i+1],&arr[high]);
-return(i+1);
-}
-void quickSort(int arr[],int low,int high){
-if(low<high){
-int pi=partition(arr,low,high);
-quickSort(arr,low,pi-1);
-quickSort(arr,pi+1,high);
-}
-}
-int generateRandomNumber(){
-return rand()%1000;
-}
+int getRandom(){return rand()%1000;}
 int main(){
-int n=6000;
-int* arr=(int*)malloc(n*sizeof(int));
+int n=6000,*a=malloc(n*sizeof(int));
 srand(time(NULL));
 printf("Random numbers for n=%d:\n",n);
-for(int i=0;i<n;i++){
-arr[i]=generateRandomNumber();
-printf("%d ",arr[i]);
-}
-printf("\n");
-clock_t start=clock();
-quickSort(arr,0,n-1);
-clock_t end=clock();
-double time_taken=((double)(end-start))/CLOCKS_PER_SEC;
-printf("\nTime taken to sort for n=%d: %lf seconds\n\n",n,time_taken);
+for(int i=0;i<n;i++){a[i]=getRandom();printf("%d ",a[i]);}
+clock_t s=clock();
+selectionSort(a,n);
+clock_t e=clock();
+double t=(double)(e-s)/CLOCKS_PER_SEC;
+printf("\n\nTime taken to sort for n=%d: %lf seconds\n\n",n,t);
 printf("Sorted numbers for n=%d:\n",n);
-for(int i=0;i<n;i++){
-printf("%d",arr[i]);
-}
+for(int i=0;i<n;i++)printf("%d",a[i]);
 printf("\n\n");
-free(arr);
+free(a);
 return 0;
 }
